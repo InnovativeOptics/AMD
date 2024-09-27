@@ -9,13 +9,26 @@
 #' @noRd
 
 
-our_data <- readxl::read_excel("data/Dental_data.xlsx",
-                               sheet = "Lens_details") %>%
+
+options(
+  gargle_oauth_email = TRUE,
+  gargle_oauth_cache = ".secrets"
+)
+
+
+googledrive::drive_auth(cache = ".secrets", email = "innovativeopticsdatabase@gmail.com")
+googlesheets4::gs4_auth(cache = ".secrets", email = "innovativeopticsdatabase@gmail.com")
+
+
+sheet_id <- googledrive::drive_get("Dental_data")$id
+
+
+our_data <- googlesheets4::read_sheet(sheet_id, sheet = "Lens_details") %>%
   mutate(VLT = scales::percent(as.numeric(VLT)),
          `Price(from)` = scales::dollar(as.numeric(`Price(from)`)))
 
-oem_data <- readxl::read_excel("data/Dental_data.xlsx",
-                               sheet = 1) %>%
+
+oem_data <- googlesheets4::read_sheet(sheet_id, sheet = "laser_info") %>%
   filter(`Laser Mfg` == "AMD")
 
 app_server <- function(input, output, session) {

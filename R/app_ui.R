@@ -25,6 +25,8 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic
     page_fluid(
+
+
       useShinyjs(),
       theme = bs_add_variables(
         bs_theme(
